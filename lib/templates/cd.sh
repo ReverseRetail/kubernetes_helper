@@ -20,6 +20,7 @@ DOCKER_ARGS=" -t $DEPLOY_NAME --build-arg DEPLOY_VERSION=${DEPLOY_VERSION} --bui
 DOCKER_BUILD_CMD="<%= continuous_deployment.docker_cmd || "docker #{continuous_deployment.docker_build_cmd || 'build -f Dockerfile'} . $DOCKER_ARGS" %>"
 
 <%= include_template "_cd_google.sh" if continuous_deployment.image_name.include?('gcr.io/') %>
+<%= include_template "_cd_google.sh" if continuous_deployment.container_registry.eq('GAR') %>
 <%= include_template "_cd_digital.sh" if continuous_deployment.image_name.include?('digitalocean.com/') %>
 
 <% unless ENV['SSH_PRIVATE_KEY'] %>
