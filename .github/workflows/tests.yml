@@ -8,7 +8,7 @@ on:
 
 jobs:
   app-tests:
-    uses: owen2345/reusable-ci-cd-actions/.github/workflows/tests.yml@main
+    uses: ReverseRetail/reusable-ci-cd-actions/.github/workflows/tests.yml@main
     with:
       prepare_db_cmd: null
       copy_env: false

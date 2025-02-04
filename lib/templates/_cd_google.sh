@@ -14,23 +14,24 @@ then
   export USE_GKE_GCLOUD_AUTH_PLUGIN=True
   gcloud components install gke-gcloud-auth-plugin
   gcloud auth activate-service-account --key-file $AUTH_PATH --project $PROJECT_NAME
-  gcloud auth configure-docker
+  gcloud auth configure-docker "$CLUSTER_REGION-docker.pkg.dev" --quiet
   gcloud docker --authorize-only --project $PROJECT_NAME
   gcloud container clusters get-credentials $CLUSTER_NAME --region $CLUSTER_REGION
+
   ## ***** END GOOGLE CONNECTOR
 fi
 
+# Docker image build and push
+#ALREADY_DEPLOYED="$(gcloud container images list-tags --format='get(tags)' $IMAGE_NAME | grep $CI_COMMIT_SHA || :;)"
+#if [ -z $ALREADY_DEPLOYED ]
+#then
+# Build and push containers
+#echo "****** PUSHING DOCKER IMAGE TO GAR ******"
+#eval $DOCKER_BUILD_CMD
+#docker push $DEPLOY_NAME
+#else
+#  echo "****** image was already created: $ALREADY_DEPLOYED"
+#fi
 
-ALREADY_DEPLOYED="$(gcloud container images list-tags --format='get(tags)' $IMAGE_NAME | grep $CI_COMMIT_SHA || :;)"
-if [ -z $ALREADY_DEPLOYED ]
-then
-  ## Build and push containers
-  echo "****** image not created yet, building image..."
-  eval $DOCKER_BUILD_CMD
-  docker push $DEPLOY_NAME
-else
-  echo "****** image was already created: $ALREADY_DEPLOYED"
-fi
-
-echo "****** tagging image $DEPLOY_NAME as $LATEST_NAME"
-gcloud container images add-tag --quiet $DEPLOY_NAME $LATEST_NAME
+# echo "****** tagging image $DEPLOY_NAME as $LATEST_NAME"
+# gcloud container images add-tag --quiet $DEPLOY_NAME $LATEST_NAME

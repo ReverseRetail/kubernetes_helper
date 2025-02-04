@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'ostruct'
 require 'yaml'
 require 'json'
 require 'erb'
